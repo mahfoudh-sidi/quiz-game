@@ -97,7 +97,8 @@ body {
 }
 
 .login-container--narrow {
-    max-width: 520px;
+    max-width: 420px;
+    width: min(90%, 420px);
 }
 
 
