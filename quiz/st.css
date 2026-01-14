@@ -176,6 +176,22 @@ body {
     font-weight: 600;
 }
 
+.register-note a {
+    color: #6a11cb;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.register-note a:hover {
+    text-decoration: underline;
+}
+
+.success {
+    color: #1f8a4c;
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+}
+
 
 /* answers Options sty */
 .options {
