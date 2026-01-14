@@ -102,6 +102,12 @@ if (isset($_POST['register'])) {
     <link rel="stylesheet" href="st.css">
 </head>
 <body>
+    <div class="theme-toggle">
+        <label class="switch">
+            <input type="checkbox" id="themeSwitch">
+            <span class="slider"></span>
+        </label>
+    </div>
     <header class="quiz-header">
         <h1>Create Your Account</h1>
         <p>Join the quiz and start testing your knowledge!</p>
@@ -139,5 +145,25 @@ if (isset($_POST['register'])) {
             Already have an account? <a href="index.php">Log in.</a>
         </p>
     </div>
+
+    <script>
+        const themeSwitch = document.getElementById('themeSwitch');
+        const body = document.body;
+
+        if (localStorage.getItem('theme') === 'dark') {
+            body.classList.add('dark-mode');
+            themeSwitch.checked = true;
+        }
+
+        themeSwitch.addEventListener('change', () => {
+            body.classList.toggle('dark-mode');
+
+            if (body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+        });
+    </script>
 </body>
 </html>
