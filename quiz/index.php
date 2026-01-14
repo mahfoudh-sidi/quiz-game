@@ -3,12 +3,29 @@ session_start();
 
 
 // Function to read users from 'users.txt'
+function getUsersFilePath() {
+    $dataDir = sys_get_temp_dir() . '/quiz-game';
+    if (!is_dir($dataDir)) {
+        mkdir($dataDir, 0777, true);
+    }
+    if (is_dir($dataDir) && is_writable($dataDir)) {
+        return $dataDir . '/users.txt';
+    }
+    return __DIR__ . '/users.txt';
+}
+
 function getUsers() {
     $users = [];
-    $lines = file('users.txt', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    $usersFile = getUsersFilePath();
+    if (!is_readable($usersFile)) {
+        return $users;
+    }
+    $lines = file($usersFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     foreach ($lines as $line) {
-        list($username, $password) = explode(':', $line);
-        $users[$username] = $password;
+        $parts = explode(':', $line, 2);
+        if (count($parts) === 2) {
+            $users[$parts[0]] = $parts[1];
+        }
     }
     return $users;
 }
