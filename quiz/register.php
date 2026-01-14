@@ -4,12 +4,37 @@ session_start();
 $error = null;
 $success = null;
 
+function getUsersFilePath() {
+    $candidates = [
+        __DIR__ . '/data/users.txt',
+        sys_get_temp_dir() . '/quiz-game/users.txt',
+        __DIR__ . '/users.txt',
+    ];
+
+    foreach ($candidates as $path) {
+        $dir = dirname($path);
+        if (!is_dir($dir)) {
+            @mkdir($dir, 0777, true);
+        }
+
+        $handle = @fopen($path, 'a');
+        if ($handle !== false) {
+            fclose($handle);
+            return $path;
+        }
+    }
+
+    return null;
+}
+
 function getUsers() {
     $users = [];
-    $usersFile = __DIR__ . '/users.txt';
-    if (!is_readable($usersFile)) {
+
+    $usersFile = getUsersFilePath();
+    if ($usersFile === null || !is_readable($usersFile)) {
         return $users;
     }
+
     $lines = file($usersFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     foreach ($lines as $line) {
         $parts = explode(':', $line, 2);
@@ -22,11 +47,17 @@ function getUsers() {
 
 function addUser($username, $password) {
     $record = $username . ':' . $password . PHP_EOL;
-    $usersFile = __DIR__ . '/users.txt';
+
+    $usersFile = getUsersFilePath();
+    if ($usersFile === null) {
+        return false;
+    }
+
     $file = fopen($usersFile, 'c+');
     if ($file === false) {
         return false;
     }
+
     $locked = flock($file, LOCK_EX);
     if ($locked) {
         fseek($file, 0, SEEK_END);
@@ -34,6 +65,7 @@ function addUser($username, $password) {
         flock($file, LOCK_UN);
     }
     fclose($file);
+
     return $locked;
 }
 
@@ -77,26 +109,32 @@ if (isset($_POST['register'])) {
 
     <div class="container login-container login-container--narrow">
         <h2>Register</h2>
+
         <?php if ($error): ?>
             <div class="error"><?php echo htmlspecialchars($error); ?></div>
         <?php elseif ($success): ?>
             <div class="success"><?php echo htmlspecialchars($success); ?></div>
         <?php endif; ?>
+
         <form method="POST">
             <div class="form-group">
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required>
             </div>
+
             <div class="form-group">
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required>
             </div>
+
             <div class="form-group">
                 <label for="confirm_password">Confirm Password:</label>
                 <input type="password" id="confirm_password" name="confirm_password" required>
             </div>
+
             <button type="submit" name="register" class="btn">Create Account</button>
         </form>
+
         <p class="register-note">
             Already have an account? <a href="index.php">Log in.</a>
         </p>
