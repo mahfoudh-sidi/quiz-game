@@ -245,7 +245,7 @@ if (isset($_POST['reset'])) {
     </header>
 <?php endif; ?>
 
-<div class="container login-container">
+<div class="container login-container <?php echo !isset($_SESSION['user']) ? 'login-container--narrow' : ''; ?>">
     <?php if (!isset($_SESSION['user'])): ?>
         <!-- Login Form -->
         <h2>Welcome to the Quiz</h2>
