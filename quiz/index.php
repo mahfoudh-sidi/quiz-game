@@ -4,27 +4,31 @@ session_start();
 
 // Function to read users from 'users.txt'
 function getUsersFilePath() {
-    $dataDir = __DIR__ . '/data';
-    if (!is_dir($dataDir)) {
-        mkdir($dataDir, 0777, true);
+    $candidates = [
+        __DIR__ . '/data/users.txt',
+        sys_get_temp_dir() . '/quiz-game/users.txt',
+        __DIR__ . '/users.txt',
+    ];
+
+    foreach ($candidates as $path) {
+        $dir = dirname($path);
+        if (!is_dir($dir)) {
+            mkdir($dir, 0777, true);
+        }
+        $handle = @fopen($path, 'a');
+        if ($handle !== false) {
+            fclose($handle);
+            return $path;
+        }
     }
-    if (is_dir($dataDir) && is_writable($dataDir)) {
-        return $dataDir . '/users.txt';
-    }
-    $fallbackDir = sys_get_temp_dir() . '/quiz-game';
-    if (!is_dir($fallbackDir)) {
-        mkdir($fallbackDir, 0777, true);
-    }
-    if (is_dir($fallbackDir) && is_writable($fallbackDir)) {
-        return $fallbackDir . '/users.txt';
-    }
-    return __DIR__ . '/users.txt';
+
+    return null;
 }
 
 function getUsers() {
     $users = [];
     $usersFile = getUsersFilePath();
-    if (!is_readable($usersFile)) {
+    if ($usersFile === null || !is_readable($usersFile)) {
         return $users;
     }
     $lines = file($usersFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
