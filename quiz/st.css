@@ -165,6 +165,17 @@ body {
     margin-bottom: 10px;
 }
 
+.register-note {
+    margin-top: 12px;
+    color: #444;
+    font-size: 0.95rem;
+}
+
+.register-note span {
+    color: #6a11cb;
+    font-weight: 600;
+}
+
 
 /* answers Options sty */
 .options {

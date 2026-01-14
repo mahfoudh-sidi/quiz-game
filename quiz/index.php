@@ -263,6 +263,7 @@ if (isset($_POST['reset'])) {
             </div>
             <button type="submit" name="login" class="btn">Login</button>
         </form>
+        <p class="register-note">Don't have an account? <span>Register here.</span></p>
     <?php elseif (!isset($_SESSION['questions'])): ?>
         
         <!-- Quiz Selection Page -->
