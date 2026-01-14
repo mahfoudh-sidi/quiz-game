@@ -6,10 +6,11 @@ $success = null;
 
 function getUsers() {
     $users = [];
-    if (!file_exists('users.txt')) {
+    $usersFile = __DIR__ . '/users.txt';
+    if (!is_readable($usersFile)) {
         return $users;
     }
-    $lines = file('users.txt', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    $lines = file($usersFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     foreach ($lines as $line) {
         $parts = explode(':', $line, 2);
         if (count($parts) === 2) {
@@ -21,12 +22,14 @@ function getUsers() {
 
 function addUser($username, $password) {
     $record = $username . ':' . $password . PHP_EOL;
-    $file = fopen('users.txt', 'a');
+    $usersFile = __DIR__ . '/users.txt';
+    $file = fopen($usersFile, 'c+');
     if ($file === false) {
         return false;
     }
     $locked = flock($file, LOCK_EX);
     if ($locked) {
+        fseek($file, 0, SEEK_END);
         fwrite($file, $record);
         flock($file, LOCK_UN);
     }
