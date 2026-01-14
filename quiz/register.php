@@ -4,12 +4,35 @@ session_start();
 $error = null;
 $success = null;
 
+function getUsersFilePath() {
+    $candidates = [
+        __DIR__ . '/data/users.txt',
+        sys_get_temp_dir() . '/quiz-game/users.txt',
+        __DIR__ . '/users.txt',
+    ];
+
+    foreach ($candidates as $path) {
+        $dir = dirname($path);
+        if (!is_dir($dir)) {
+            mkdir($dir, 0777, true);
+        }
+        $handle = @fopen($path, 'a');
+        if ($handle !== false) {
+            fclose($handle);
+            return $path;
+        }
+    }
+
+    return null;
+}
+
 function getUsers() {
     $users = [];
-    if (!file_exists('users.txt')) {
+    $usersFile = getUsersFilePath();
+    if ($usersFile === null || !is_readable($usersFile)) {
         return $users;
     }
-    $lines = file('users.txt', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    $lines = file($usersFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     foreach ($lines as $line) {
         $parts = explode(':', $line, 2);
         if (count($parts) === 2) {
@@ -21,12 +44,17 @@ function getUsers() {
 
 function addUser($username, $password) {
     $record = $username . ':' . $password . PHP_EOL;
-    $file = fopen('users.txt', 'a');
+    $usersFile = getUsersFilePath();
+    if ($usersFile === null) {
+        return false;
+    }
+    $file = fopen($usersFile, 'c+');
     if ($file === false) {
         return false;
     }
     $locked = flock($file, LOCK_EX);
     if ($locked) {
+        fseek($file, 0, SEEK_END);
         fwrite($file, $record);
         flock($file, LOCK_UN);
     }
@@ -67,6 +95,12 @@ if (isset($_POST['register'])) {
     <link rel="stylesheet" href="st.css">
 </head>
 <body>
+    <div class="theme-toggle">
+        <label class="switch">
+            <input type="checkbox" id="themeSwitch">
+            <span class="slider"></span>
+        </label>
+    </div>
     <header class="quiz-header">
         <h1>Create Your Account</h1>
         <p>Join the quiz and start testing your knowledge!</p>
@@ -98,5 +132,25 @@ if (isset($_POST['register'])) {
             Already have an account? <a href="index.php">Log in.</a>
         </p>
     </div>
+
+    <script>
+        const themeSwitch = document.getElementById('themeSwitch');
+        const body = document.body;
+
+        if (localStorage.getItem('theme') === 'dark') {
+            body.classList.add('dark-mode');
+            themeSwitch.checked = true;
+        }
+
+        themeSwitch.addEventListener('change', () => {
+            body.classList.toggle('dark-mode');
+
+            if (body.classList.contains('dark-mode')) {
+                localStorage.setItem('theme', 'dark');
+            } else {
+                localStorage.setItem('theme', 'light');
+            }
+        });
+    </script>
 </body>
 </html>
