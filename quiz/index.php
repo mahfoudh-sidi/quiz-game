@@ -4,12 +4,19 @@ session_start();
 
 // Function to read users from 'users.txt'
 function getUsersFilePath() {
-    $dataDir = sys_get_temp_dir() . '/quiz-game';
+    $dataDir = __DIR__ . '/data';
     if (!is_dir($dataDir)) {
         mkdir($dataDir, 0777, true);
     }
     if (is_dir($dataDir) && is_writable($dataDir)) {
         return $dataDir . '/users.txt';
+    }
+    $fallbackDir = sys_get_temp_dir() . '/quiz-game';
+    if (!is_dir($fallbackDir)) {
+        mkdir($fallbackDir, 0777, true);
+    }
+    if (is_dir($fallbackDir) && is_writable($fallbackDir)) {
+        return $fallbackDir . '/users.txt';
     }
     return __DIR__ . '/users.txt';
 }
