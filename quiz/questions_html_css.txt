@@ -1,0 +1,11 @@
+What does HTML stand for?|HyperText Markup Language|HighText Machine Language|Hyperlink Text Mark Language|HyperText Machine Language|HyperText Markup Language
+What is the purpose of CSS?|Style the content of a webpage|Define the content of a webpage|Perform calculations on data|Store data in a database|Style the content of a webpage
+Which tag is used to create a hyperlink in HTML?|<a>|<link>|<hyper>|<href>|<a>
+What is the correct HTML element for inserting a line break?|<br>|<break>|<lb>|<line>|<br>
+How do you apply a class in HTML?|class="classname"|id="classname"|name="classname"|style="classname"|class="classname"
+Which CSS property is used to change the text color?|color|text-color|font-color|text-style|color
+What does the <title> tag in HTML do?|Sets the title of the web page|Adds a heading to the web page|Defines the main content of the web page|Creates a link|Sets the title of the web page
+What is the default positioning of elements in CSS?|Static|Relative|Absolute|Fixed|Static
+How can you include an external CSS file in an HTML document?|<link rel="stylesheet" href="style.css">|<css src="style.css">|<stylesheet link="style.css">|<file src="style.css">|<link rel="stylesheet" href="style.css">
+Which tag is used to create an ordered list in HTML?|<ol>|<ul>|<list>|<order>|<ol>
+

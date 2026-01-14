@@ -1,0 +1,10 @@
+How many players are on a soccer team?|11|9|7|10|11
+What is the national sport of Japan?|Sumo Wrestling|Baseball|Soccer|Karate|Sumo Wrestling
+Which sport uses a puck?|Hockey|Soccer|Basketball|Tennis|Hockey
+What is the highest score in a single basketball shot?|3 points|2 points|5 points|1 point|3 points
+In which sport is Wimbledon a major tournament?|Tennis|Golf|Cricket|Soccer|Tennis
+What is the diameter of a basketball hoop?|18 inches|20 inches|22 inches|16 inches|18 inches
+How long is an Olympic swimming pool?|50 meters|25 meters|100 meters|75 meters|50 meters
+How many rings are there on the Olympic flag?|5|4|6|3|5
+Which sport is associated with the FIFA World Cup?|Soccer|Tennis|Cricket|Rugby|Soccer
+What sport is played at the Super Bowl?|American Football|Baseball|Basketball|Rugby|American Football

@@ -1,0 +1,10 @@
+What is the largest continent on Earth?|Asia|Africa|Europe|North America|Asia
+Which is the longest river in the world?|Nile|Amazon|Yangtze|Mississippi|Nile
+What is the capital of Canada?|Ottawa|Toronto|Vancouver|Montreal|Ottawa
+Which country has the Great Wall?|China|India|Japan|Russia|China
+What is the smallest country in the world?|Vatican City|Monaco|San Marino|Liechtenstein|Vatican City
+Which ocean is the largest?|Pacific Ocean|Atlantic Ocean|Indian Ocean|Arctic Ocean|Pacific Ocean
+Mount Everest is located in which mountain range?|Himalayas|Andes|Rockies|Alps|Himalayas
+Which desert is the largest in the world?|Sahara|Gobi|Kalahari|Antarctic Desert|Sahara
+What is the capital of Australia?|Canberra|Sydney|Melbourne|Brisbane|Canberra
+Which line divides Earth into the Northern and Southern Hemispheres?|Equator|Prime Meridian|Tropic of Cancer|Tropic of Capricorn|Equator
