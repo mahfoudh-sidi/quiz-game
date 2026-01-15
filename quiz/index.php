@@ -170,19 +170,18 @@ if (isset($_POST['select_another_quiz'])) {
 // Handle answer submission
 if (isset($_POST['submit_answer'])) {
     // Fetch the selected answer (button value submitted by the user)
-    $selected_index = intval($_POST['answer']); // Ensure it's treated as an integer (1-based index)
+    $selected_index = isset($_POST['answer']) ? intval($_POST['answer']) : null; // Ensure it's treated as an integer (1-based index)
 
     // Fetch the correct index for the current question
     $correct_index = $_SESSION['correct_option_index'][$_SESSION['current_question']]; // 1-based index
 
-    // Debugging (optional for testing purposes)
-    // Uncomment the following line during testing to check the indices
-    // echo "Selected Index: $selected_index, Correct Index: $correct_index";
-
     // Compare the selected answer with the correct answer
-    if ($selected_index === $correct_index) {
+    $is_correct = $selected_index === $correct_index;
+    if ($is_correct) {
         $_SESSION['score']++; // Increment the score if the user's answer is correct
     }
+    $_SESSION['answer_feedback'] = $is_correct ? 'Correct!' : 'Incorrect!';
+    $_SESSION['answer_feedback_is_correct'] = $is_correct;
 
     // Move to the next question
     $_SESSION['current_question']++;
@@ -211,30 +210,6 @@ if (isset($_POST['reset'])) {
     $_SESSION['score'] = 0;
     $_SESSION['timer_start'] = time();
 }
-
-/*if (isset($_POST['select_random_quiz'])) {
-    $all_questions = [];
-    
-    // Combine questions from all quiz files
-    foreach ($quiz_files as $file) {
-        $questions = getQuestions($file); // Use your existing `getQuestions` function
-        $all_questions = array_merge($all_questions, $questions);
-    }
-    
-    // Shuffle the combined questions
-    shuffle($all_questions);
-    
-    // Limit to 10 questions
-    $limited_questions = array_slice($all_questions, 0, 10);
-    
-    // Store the random questions in the session
-    $_SESSION['questions'] = $limited_questions;
-    $_SESSION['quiz_title'] = "Surprise Me!";
-    $_SESSION['current_question'] = 0;
-    $_SESSION['score'] = 0;
-    $_SESSION['timer_start'] = time();
-} */
-
 
 ?>
 
@@ -343,7 +318,7 @@ if (isset($_POST['reset'])) {
         </form>
     <?php else: ?>
         <!-- Quiz Interface -->
-        <div class="header">
+    <div class="header">
     <h2><?php echo htmlspecialchars($_SESSION['quiz_title']); ?></h2>
     <form method="POST" style="display: inline;">
         <button type="submit" name="select_another_quiz" class="btn">Select Another Quiz</button>
@@ -352,6 +327,13 @@ if (isset($_POST['reset'])) {
         <button type="submit" name="logout" class="btn logout-btn">Logout</button>
     </form>
 </div>
+
+<?php if (!empty($_SESSION['answer_feedback'])): ?>
+    <div class="answer-banner <?php echo $_SESSION['answer_feedback_is_correct'] ? 'answer-banner--correct' : 'answer-banner--incorrect'; ?>">
+        <?php echo htmlspecialchars($_SESSION['answer_feedback']); ?>
+    </div>
+    <?php unset($_SESSION['answer_feedback'], $_SESSION['answer_feedback_is_correct']); ?>
+<?php endif; ?>
 
 <?php if ($_SESSION['current_question'] < count($_SESSION['questions'])): ?>
     <div class="quiz-controls">
@@ -374,6 +356,8 @@ if (isset($_POST['reset'])) {
     // JavaScript Countdown Timer
     let timeRemaining = <?php echo max(0, $time_limit - $time_elapsed); ?>;
     const timerElement = document.getElementById('timer');
+    const hintButton = document.getElementById('hint-btn');
+    const options = document.querySelectorAll('.option-btn');
 
     const countdown = setInterval(() => {
         timeRemaining--;
@@ -399,6 +383,28 @@ if (isset($_POST['reset'])) {
             document.forms['auto-submit'].submit();
         }
     }, 1000);
+
+    if (hintButton) {
+        hintButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            let removed = 0;
+
+            const correctOption = Array.from(options).find((option) => option.classList.contains('correct'));
+
+            options.forEach((option) => {
+                if (removed < 2 && option !== correctOption && option.style.display !== 'none') {
+                    option.style.display = 'none';
+                    removed++;
+                }
+            });
+
+            timeRemaining = Math.max(0, timeRemaining - 10);
+            timerElement.textContent = timeRemaining;
+
+            hintButton.disabled = true;
+            hintButton.textContent = 'Hint Used';
+        });
+    }
 </script>
 
 <!-- Hidden Form to Submit When Time Expires -->
@@ -474,72 +480,6 @@ for ($i = 1; $i <= 4; $i++): ?>
             localStorage.setItem('theme', 'light');
         }
     });
-</script>
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const timerElement = document.getElementById('timer');
-    const hintButton = document.getElementById('hint-btn');
-    const options = document.querySelectorAll('.option-btn');
-    let timeRemaining = parseInt(timerElement.textContent, 10);
-
-    // Countdown timer
-    const countdown = setInterval(() => {
-        timeRemaining--;
-        timerElement.textContent = timeRemaining;
-
-        // Stop the timer when it reaches 0
-        if (timeRemaining <= 0) {
-            clearInterval(countdown);
-            document.forms['auto-submit'].submit(); // Auto-submit the question
-        }
-    }, 1000);
-
-    // Handle the hint button functionality
-    if (hintButton) {
-        hintButton.addEventListener('click', (e) => {
-            e.preventDefault(); // Prevent form submission
-            let removed = 0;
-
-            // Ensure the correct answer is never removed
-            const correctOption = Array.from(options).find((option) => option.classList.contains('correct'));
-
-            // Hide two incorrect answers
-            options.forEach((option) => {
-                if (removed < 2 && option !== correctOption && option.style.display !== 'none') {
-                    option.style.display = 'none'; // Hide incorrect option
-                    removed++;
-                }
-            });
-
-            // Deduct 10 seconds from the remaining time
-            timeRemaining = Math.max(0, timeRemaining - 10);
-            timerElement.textContent = timeRemaining;
-
-            // Disable the hint button for the current question
-            hintButton.disabled = true;
-            hintButton.textContent = 'Hint Used';
-        });
-    }
-
-    // Reset for the next question (if applicable)
-    document.addEventListener('questionChange', () => {
-        // Reset hint button state
-        if (hintButton) {
-            hintButton.disabled = false;
-            hintButton.textContent = 'Use Hint';
-        }
-
-        // Reset visibility of all options
-        options.forEach((option) => {
-            option.style.display = 'block';
-        });
-
-        // Update timer value dynamically
-        timeRemaining = parseInt(timerElement.textContent, 10);
-    });
-});
-
 </script>
 
 </body>
