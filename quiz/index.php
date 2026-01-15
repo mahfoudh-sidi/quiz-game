@@ -343,9 +343,6 @@ if (isset($_POST['reset'])) {
                 <span id="timer" class="timer-box"><?php echo $time_limit; ?></span> seconds
             </p>
         </div>
-    </div>
-    <!-- Hint Button -->
-    <div class="quiz-controls">
         <button id="hint-btn" class="hint-btn">Use a Hint</button>
     </div>
 
