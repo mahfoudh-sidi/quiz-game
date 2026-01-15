@@ -170,15 +170,18 @@ if (isset($_POST['select_another_quiz'])) {
 // Handle answer submission
 if (isset($_POST['submit_answer'])) {
     // Fetch the selected answer (button value submitted by the user)
-    $selected_index = intval($_POST['answer']); // Ensure it's treated as an integer (1-based index)
+    $selected_index = isset($_POST['answer']) ? intval($_POST['answer']) : null; // Ensure it's treated as an integer (1-based index)
 
     // Fetch the correct index for the current question
     $correct_index = $_SESSION['correct_option_index'][$_SESSION['current_question']]; // 1-based index
 
     // Compare the selected answer with the correct answer
-    if ($selected_index === $correct_index) {
+    $is_correct = $selected_index === $correct_index;
+    if ($is_correct) {
         $_SESSION['score']++; // Increment the score if the user's answer is correct
     }
+    $_SESSION['answer_feedback'] = $is_correct ? 'Correct!' : 'Incorrect!';
+    $_SESSION['answer_feedback_is_correct'] = $is_correct;
 
     // Move to the next question
     $_SESSION['current_question']++;
@@ -315,7 +318,7 @@ if (isset($_POST['reset'])) {
         </form>
     <?php else: ?>
         <!-- Quiz Interface -->
-        <div class="header">
+    <div class="header">
     <h2><?php echo htmlspecialchars($_SESSION['quiz_title']); ?></h2>
     <form method="POST" style="display: inline;">
         <button type="submit" name="select_another_quiz" class="btn">Select Another Quiz</button>
@@ -324,6 +327,13 @@ if (isset($_POST['reset'])) {
         <button type="submit" name="logout" class="btn logout-btn">Logout</button>
     </form>
 </div>
+
+<?php if (!empty($_SESSION['answer_feedback'])): ?>
+    <div class="answer-banner <?php echo $_SESSION['answer_feedback_is_correct'] ? 'answer-banner--correct' : 'answer-banner--incorrect'; ?>">
+        <?php echo htmlspecialchars($_SESSION['answer_feedback']); ?>
+    </div>
+    <?php unset($_SESSION['answer_feedback'], $_SESSION['answer_feedback_is_correct']); ?>
+<?php endif; ?>
 
 <?php if ($_SESSION['current_question'] < count($_SESSION['questions'])): ?>
     <div class="quiz-controls">

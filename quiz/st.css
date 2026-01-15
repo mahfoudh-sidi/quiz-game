@@ -248,6 +248,27 @@ body {
     transition: border-color 0.3s, color 0.3s;
 }
 
+.answer-banner {
+    margin: 10px auto 20px;
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-weight: 600;
+    width: fit-content;
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+.answer-banner--correct {
+    background-color: #e7f8ee;
+    color: #1a7f42;
+    border: 2px solid #66d19e;
+}
+
+.answer-banner--incorrect {
+    background-color: #fdeaea;
+    color: #b42318;
+    border: 2px solid #f2a3a3;
+}
+
 /* Container for Quiz Cards */
 .quiz-cards-container {
     display: flex; /* Use flexbox for layout */
