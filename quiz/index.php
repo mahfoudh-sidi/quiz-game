@@ -226,6 +226,10 @@ if (isset($_SESSION['questions']) && $_SESSION['current_question'] >= count($_SE
     unset($_SESSION['answer_feedback'], $_SESSION['answer_feedback_is_correct']);
 }
 
+if (isset($_SESSION['questions']) && $_SESSION['current_question'] >= count($_SESSION['questions'])) {
+    unset($_SESSION['answer_feedback'], $_SESSION['answer_feedback_is_correct']);
+}
+
 
 
 
@@ -258,7 +262,7 @@ if (isset($_POST['reset'])) {
     <!-- Dark Mode Toggle -->
 <div class="theme-toggle">
     <label class="switch">
-        <input type="checkbox" id="themeSwitch">
+        <input type="checkbox" id="themeSwitch" aria-label="Toggle dark mode">
         <span class="slider"></span>
     </label>
 </div>

@@ -405,7 +405,7 @@ body.dark-mode {
 
 body.dark-mode .container {
     background-color: #000000;
-    color: #000000;
+    color: #ffffff;
 }
 
 body.dark-mode .btn {
