@@ -194,6 +194,10 @@ if (isset($_POST['submit_answer'])) {
     exit();
 }
 
+if (isset($_SESSION['questions']) && $_SESSION['current_question'] >= count($_SESSION['questions'])) {
+    unset($_SESSION['answer_feedback'], $_SESSION['answer_feedback_is_correct']);
+}
+
 
 
 
@@ -328,7 +332,7 @@ if (isset($_POST['reset'])) {
     </form>
 </div>
 
-<?php if (!empty($_SESSION['answer_feedback'])): ?>
+<?php if (!empty($_SESSION['answer_feedback']) && $_SESSION['current_question'] < count($_SESSION['questions'])): ?>
     <div class="answer-banner <?php echo $_SESSION['answer_feedback_is_correct'] ? 'answer-banner--correct' : 'answer-banner--incorrect'; ?>">
         <?php echo htmlspecialchars($_SESSION['answer_feedback']); ?>
     </div>
