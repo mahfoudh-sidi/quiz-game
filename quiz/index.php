@@ -343,74 +343,13 @@ if (isset($_POST['reset'])) {
                 <span id="timer" class="timer-box"><?php echo $time_limit; ?></span> seconds
             </p>
         </div>
-<!-- Hint Button -->
-<?php if ($_SESSION['current_question'] < count($_SESSION['questions'])): ?>
-<div class="quiz-controls">
-    <button id="hint-btn" class="hint-btn">Use a Hint</button>
-</div>
-<?php endif; ?>
+        <button id="hint-btn" class="hint-btn">Use a Hint</button>
+    </div>
 
-
-
-<script>
-    // JavaScript Countdown Timer
-    let timeRemaining = <?php echo max(0, $time_limit - $time_elapsed); ?>;
-    const timerElement = document.getElementById('timer');
-    const hintButton = document.getElementById('hint-btn');
-    const options = document.querySelectorAll('.option-btn');
-
-    const countdown = setInterval(() => {
-        timeRemaining--;
-
-        // Update timer text
-        timerElement.textContent = timeRemaining;
-
-        // Change border color dynamically
-        if (timeRemaining <= 10) {
-            timerElement.style.borderColor = 'red';
-            timerElement.style.color = 'red';
-        } else if (timeRemaining <= 20) {
-            timerElement.style.borderColor = 'orange';
-            timerElement.style.color = 'orange';
-        } else {
-            timerElement.style.borderColor = '#6a11cb'; // Default color (purple)
-            timerElement.style.color = '#6a11cb';
-        }
-
-        // Auto-submit when time runs out
-        if (timeRemaining <= 0) {
-            clearInterval(countdown);
-            document.forms['auto-submit'].submit();
-        }
-    }, 1000);
-
-    if (hintButton) {
-        hintButton.addEventListener('click', (e) => {
-            e.preventDefault();
-            let removed = 0;
-
-            const correctOption = Array.from(options).find((option) => option.classList.contains('correct'));
-
-            options.forEach((option) => {
-                if (removed < 2 && option !== correctOption && option.style.display !== 'none') {
-                    option.style.display = 'none';
-                    removed++;
-                }
-            });
-
-            timeRemaining = Math.max(0, timeRemaining - 10);
-            timerElement.textContent = timeRemaining;
-
-            hintButton.disabled = true;
-            hintButton.textContent = 'Hint Used';
-        });
-    }
-</script>
-
-<!-- Hidden Form to Submit When Time Expires -->
-<form id="auto-submit" method="POST">
-    <input type="hidden" name="submit_answer" value="1">
-</form>
+    <!-- Hidden Form to Submit When Time Expires -->
+    <form id="auto-submit" method="POST">
+        <input type="hidden" name="submit_answer" value="1">
+    </form>
 <?php endif; ?>
 
 
@@ -437,6 +376,59 @@ for ($i = 1; $i <= 4; $i++): ?>
                     </div>
                 </form>
             </div>
+            <script>
+                // JavaScript Countdown Timer
+                let timeRemaining = <?php echo max(0, $time_limit - $time_elapsed); ?>;
+                const timerElement = document.getElementById('timer');
+                const hintButton = document.getElementById('hint-btn');
+
+                const countdown = setInterval(() => {
+                    timeRemaining--;
+
+                    // Update timer text
+                    timerElement.textContent = timeRemaining;
+
+                    // Change border color dynamically
+                    if (timeRemaining <= 10) {
+                        timerElement.style.borderColor = 'red';
+                        timerElement.style.color = 'red';
+                    } else if (timeRemaining <= 20) {
+                        timerElement.style.borderColor = 'orange';
+                        timerElement.style.color = 'orange';
+                    } else {
+                        timerElement.style.borderColor = '#6a11cb'; // Default color (purple)
+                        timerElement.style.color = '#6a11cb';
+                    }
+
+                    // Auto-submit when time runs out
+                    if (timeRemaining <= 0) {
+                        clearInterval(countdown);
+                        document.forms['auto-submit'].submit();
+                    }
+                }, 1000);
+
+                if (hintButton) {
+                    hintButton.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        let removed = 0;
+                        const options = document.querySelectorAll('.option-btn');
+                        const correctOption = Array.from(options).find((option) => option.classList.contains('correct'));
+
+                        options.forEach((option) => {
+                            if (removed < 2 && option !== correctOption && option.style.display !== 'none') {
+                                option.style.display = 'none';
+                                removed++;
+                            }
+                        });
+
+                        timeRemaining = Math.max(0, timeRemaining - 10);
+                        timerElement.textContent = timeRemaining;
+
+                        hintButton.disabled = true;
+                        hintButton.textContent = 'Hint Used';
+                    });
+                }
+            </script>
         <?php else: ?>
             <!-- Quiz Complete -->
             <div class="score-container">
