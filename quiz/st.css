@@ -43,18 +43,6 @@ body {
     font-weight: 400;
 }
 
-/* Slide-in Animation */
-@keyframes slide-in {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
 /* Fun Quiz Selection Header */
 .quiz-header2 {
     text-align: center;
@@ -260,6 +248,27 @@ body {
     transition: border-color 0.3s, color 0.3s;
 }
 
+.answer-banner {
+    margin: 10px auto 20px;
+    padding: 10px 18px;
+    border-radius: 999px;
+    font-weight: 600;
+    width: fit-content;
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+.answer-banner--correct {
+    background-color: #e7f8ee;
+    color: #1a7f42;
+    border: 2px solid #66d19e;
+}
+
+.answer-banner--incorrect {
+    background-color: #fdeaea;
+    color: #b42318;
+    border: 2px solid #f2a3a3;
+}
+
 /* Container for Quiz Cards */
 .quiz-cards-container {
     display: flex; /* Use flexbox for layout */
@@ -396,7 +405,7 @@ body.dark-mode {
 
 body.dark-mode .container {
     background-color: #000000;
-    color: #000000;
+    color: #ffffff;
 }
 
 body.dark-mode .btn {
@@ -527,6 +536,94 @@ body.dark-mode .question-container p {
 .try-again-btn:hover {
     background-color: #4e54c8;
     transform: scale(1.05);
+}
+
+.answer-review {
+    margin-top: 20px;
+    text-align: left;
+    background-color: #ffffff;
+    color: #333;
+    border-radius: 16px;
+    padding: 16px 20px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.answer-review summary {
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1.05rem;
+    list-style: none;
+}
+
+.answer-review summary::-webkit-details-marker {
+    display: none;
+}
+
+.answer-review-list {
+    margin-top: 15px;
+    display: grid;
+    gap: 16px;
+    padding-left: 20px;
+}
+
+.answer-review-item {
+    background-color: #f6f7fb;
+    border-radius: 12px;
+    padding: 14px 16px;
+    border: 1px solid #e3e6ef;
+}
+
+.answer-review-question {
+    font-weight: 600;
+    color: #2a2a2a;
+    margin-bottom: 8px;
+}
+
+.answer-review-result {
+    display: inline-block;
+    margin-bottom: 8px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.answer-review-result--correct {
+    background-color: #e7f8ee;
+    color: #1a7f42;
+}
+
+.answer-review-result--incorrect {
+    background-color: #fdeaea;
+    color: #b42318;
+}
+
+.answer-review-detail {
+    color: #444;
+    margin-top: 4px;
+}
+
+.answer-review-detail span {
+    font-weight: 600;
+}
+
+body.dark-mode .answer-review {
+    background-color: #111;
+    color: #fff;
+    border: 1px solid #2a2a2a;
+}
+
+body.dark-mode .answer-review-item {
+    background-color: #1b1b1b;
+    border-color: #2a2a2a;
+}
+
+body.dark-mode .answer-review-question {
+    color: #fff;
+}
+
+body.dark-mode .answer-review-detail {
+    color: #d9d9d9;
 }
 
 /* Fade-In Animation */
