@@ -142,6 +142,7 @@ if (isset($_POST['select_quiz'])) {
     $_SESSION['current_question'] = 0;
     $_SESSION['score'] = 0;
     $_SESSION['timer_start'] = time();
+    $_SESSION['answer_log'] = [];
 }
 // Timer Initialization and Time Check
 if (!isset($_SESSION['timer_start'])) {
@@ -153,6 +154,19 @@ $time_elapsed = $current_time - $_SESSION['timer_start'];
 
 // If time expires, move to the next question
 if ($time_elapsed >= $time_limit) {
+    if (
+        isset($_SESSION['questions'], $_SESSION['correct_option_index'], $_SESSION['answer_log'])
+        && $_SESSION['current_question'] < count($_SESSION['questions'])
+        && !isset($_SESSION['answer_log'][$_SESSION['current_question']])
+    ) {
+        $question_index = $_SESSION['current_question'];
+        $_SESSION['answer_log'][$question_index] = [
+            'question' => $_SESSION['questions'][$question_index],
+            'selected_index' => null,
+            'correct_index' => $_SESSION['correct_option_index'][$question_index],
+            'is_correct' => false,
+        ];
+    }
     $_SESSION['current_question']++;
     $_SESSION['timer_start'] = time(); // Reset timer for the next question
     header("Location: " . $_SERVER['PHP_SELF']);
@@ -165,6 +179,7 @@ if (isset($_POST['select_another_quiz'])) {
     unset($_SESSION['current_question']);
     unset($_SESSION['score']);
     unset($_SESSION['quiz_title']);
+    unset($_SESSION['answer_log']);
 }
 
 // Handle answer submission
@@ -182,6 +197,15 @@ if (isset($_POST['submit_answer'])) {
     }
     $_SESSION['answer_feedback'] = $is_correct ? 'Correct!' : 'Incorrect!';
     $_SESSION['answer_feedback_is_correct'] = $is_correct;
+    if (!isset($_SESSION['answer_log'])) {
+        $_SESSION['answer_log'] = [];
+    }
+    $_SESSION['answer_log'][$_SESSION['current_question']] = [
+        'question' => $_SESSION['questions'][$_SESSION['current_question']],
+        'selected_index' => $selected_index,
+        'correct_index' => $correct_index,
+        'is_correct' => $is_correct,
+    ];
 
     // Move to the next question
     $_SESSION['current_question']++;
@@ -192,6 +216,10 @@ if (isset($_POST['submit_answer'])) {
     // Redirect to refresh the page and avoid duplicate submissions
     header("Location: " . $_SERVER['PHP_SELF']);
     exit();
+}
+
+if (isset($_SESSION['questions']) && $_SESSION['current_question'] >= count($_SESSION['questions'])) {
+    unset($_SESSION['answer_feedback'], $_SESSION['answer_feedback_is_correct']);
 }
 
 if (isset($_SESSION['questions']) && $_SESSION['current_question'] >= count($_SESSION['questions'])) {
@@ -213,6 +241,7 @@ if (isset($_POST['reset'])) {
     $_SESSION['current_question'] = 0;
     $_SESSION['score'] = 0;
     $_SESSION['timer_start'] = time();
+    $_SESSION['answer_log'] = [];
 }
 
 ?>
@@ -448,6 +477,35 @@ for ($i = 1; $i <= 4; $i++): ?>
     <form method="POST">
         <button type="submit" name="reset" class="btn try-again-btn">Try Again</button>
     </form>
+    <?php if (!empty($_SESSION['answer_log'])): ?>
+        <details class="answer-review">
+            <summary>Review your answers</summary>
+            <ol class="answer-review-list">
+                <?php foreach ($_SESSION['answer_log'] as $review_item): ?>
+                    <?php
+                    $question_text = $review_item['question'][0];
+                    $correct_index = $review_item['correct_index'];
+                    $selected_index = $review_item['selected_index'];
+                    $is_correct = $review_item['is_correct'];
+                    $selected_label = $selected_index ? $review_item['question'][$selected_index] : 'No answer';
+                    $correct_label = $review_item['question'][$correct_index];
+                    ?>
+                    <li class="answer-review-item">
+                        <p class="answer-review-question"><?php echo htmlspecialchars($question_text); ?></p>
+                        <p class="answer-review-result <?php echo $is_correct ? 'answer-review-result--correct' : 'answer-review-result--incorrect'; ?>">
+                            <?php echo $is_correct ? 'Correct' : 'Incorrect'; ?>
+                        </p>
+                        <p class="answer-review-detail">
+                            Your answer: <span><?php echo htmlspecialchars($selected_label); ?></span>
+                        </p>
+                        <p class="answer-review-detail">
+                            Correct answer: <span><?php echo htmlspecialchars($correct_label); ?></span>
+                        </p>
+                    </li>
+                <?php endforeach; ?>
+            </ol>
+        </details>
+    <?php endif; ?>
 </div>
 
         <?php endif; ?>

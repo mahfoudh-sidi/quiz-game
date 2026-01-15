@@ -538,6 +538,94 @@ body.dark-mode .question-container p {
     transform: scale(1.05);
 }
 
+.answer-review {
+    margin-top: 20px;
+    text-align: left;
+    background-color: #ffffff;
+    color: #333;
+    border-radius: 16px;
+    padding: 16px 20px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.answer-review summary {
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1.05rem;
+    list-style: none;
+}
+
+.answer-review summary::-webkit-details-marker {
+    display: none;
+}
+
+.answer-review-list {
+    margin-top: 15px;
+    display: grid;
+    gap: 16px;
+    padding-left: 20px;
+}
+
+.answer-review-item {
+    background-color: #f6f7fb;
+    border-radius: 12px;
+    padding: 14px 16px;
+    border: 1px solid #e3e6ef;
+}
+
+.answer-review-question {
+    font-weight: 600;
+    color: #2a2a2a;
+    margin-bottom: 8px;
+}
+
+.answer-review-result {
+    display: inline-block;
+    margin-bottom: 8px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.answer-review-result--correct {
+    background-color: #e7f8ee;
+    color: #1a7f42;
+}
+
+.answer-review-result--incorrect {
+    background-color: #fdeaea;
+    color: #b42318;
+}
+
+.answer-review-detail {
+    color: #444;
+    margin-top: 4px;
+}
+
+.answer-review-detail span {
+    font-weight: 600;
+}
+
+body.dark-mode .answer-review {
+    background-color: #111;
+    color: #fff;
+    border: 1px solid #2a2a2a;
+}
+
+body.dark-mode .answer-review-item {
+    background-color: #1b1b1b;
+    border-color: #2a2a2a;
+}
+
+body.dark-mode .answer-review-question {
+    color: #fff;
+}
+
+body.dark-mode .answer-review-detail {
+    color: #d9d9d9;
+}
+
 /* Fade-In Animation */
 @keyframes fadeIn {
     from {
