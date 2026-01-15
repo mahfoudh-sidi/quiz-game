@@ -222,6 +222,14 @@ if (isset($_SESSION['questions']) && $_SESSION['current_question'] >= count($_SE
     unset($_SESSION['answer_feedback'], $_SESSION['answer_feedback_is_correct']);
 }
 
+if (isset($_SESSION['questions']) && $_SESSION['current_question'] >= count($_SESSION['questions'])) {
+    unset($_SESSION['answer_feedback'], $_SESSION['answer_feedback_is_correct']);
+}
+
+if (isset($_SESSION['questions']) && $_SESSION['current_question'] >= count($_SESSION['questions'])) {
+    unset($_SESSION['answer_feedback'], $_SESSION['answer_feedback_is_correct']);
+}
+
 
 
 
